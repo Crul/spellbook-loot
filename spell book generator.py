@@ -22,15 +22,24 @@ def getmaxspell(wizlevel):
 def getspells(number, level):
     """ return a list of spells, length number, of spell level level"""
     spells = []
+    levelspelllist = spelllist[level]
     for i in range(number):
-        choice = random.choice(spelllist[level])
-        #if the chosen spell is not in the list, add it
-        if choice not in spells:
-            spells.append(choice)
-        #if the spell is in the list, there is a chance of adding it as a personlized spell,
-        #otherwise will look for a new original spell of level
-        else:
-            random.choice([getspells(1,level),spells.append("Personalized {}".format(choice))])
+        choice = random.choice(levelspelllist)
+
+        if choice in spells:
+            #if the spell is in the list, there is a chance of adding it as a personlized spell,
+            #otherwise will look for a new original spell of level
+            personalized_choice = f"Personalized {choice}"
+            if personalized_choice not in spells and bool(random.getrandbits(1)):
+                choice = personalized_choice
+            else:
+                while choice in spells:
+                    choice = random.choice(levelspelllist)
+
+        spells.append(choice)
+
+    assert sorted(spells) == sorted(list(set(spells))), f"DUPLICATED SPELL IN {sorted(spells)}"
+
     return spells
         
         
